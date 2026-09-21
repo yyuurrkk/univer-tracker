@@ -6,25 +6,21 @@
   <title>Трекер учебы — 2ИСТ</title>
   <style>
     :root {
-      /* Темно-серая палитра */
-      --bg: #121212;             /* Глубокий темно-серый фон */
-      --card-bg: #1c1c1e;        /* Цвет карточек */
-      --border: #2c2c2e;         /* Границы и разделители */
-      --btn-bg: #262629;         /* Кнопки */
-      --btn-hover: #3a3a3c;      /* Кнопки при наведении */
+      --bg: #121212;
+      --card-bg: #1c1c1e;
+      --border: #2c2c2e;
+      --btn-bg: #262629;
+      --btn-hover: #3a3a3c;
       
-      --text: #f2f2f7;           /* Основной текст */
-      --text-muted: #8e8e93;     /* Второстепенный серый текст */
-      --accent: #d1d1d6;         /* Серебристый акцент */
-      --today-border: #636366;   /* Выделение сегодняшнего дня */
+      --text: #f2f2f7;
+      --text-muted: #8e8e93;
+      --accent: #d1d1d6;
+      --today-border: #636366;
       
-      /* Приглушенные теги типов занятий */
       --tag-lek-bg: #2a1b1d;
       --tag-lek-text: #ff6961;
-      
       --tag-pr-bg: #16261d;
       --tag-pr-text: #4cd964;
-      
       --tag-lab-bg: #251e2e;
       --tag-lab-text: #bb86fc;
     }
@@ -37,7 +33,7 @@
     h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
     .subtitle { color: var(--text-muted); font-size: 0.85rem; }
 
-    /* Навигация по неделям */
+    /* Навигация */
     .week-nav {
       display: flex;
       align-items: center;
@@ -52,10 +48,10 @@
       background: var(--btn-bg); 
       color: var(--text); 
       border: 1px solid var(--border); 
-      padding: 8px 14px; 
+      padding: 8px 12px; 
       border-radius: 8px; 
       cursor: pointer; 
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 500; 
       transition: all 0.2s ease;
     }
@@ -66,6 +62,8 @@
     .week-dates { font-size: 0.85rem; color: var(--accent); margin-top: 2px; }
     .week-type { font-size: 0.75rem; color: var(--text-muted); }
 
+    .nav-actions { display: flex; gap: 6px; }
+
     /* Карточки дней */
     .day-card { 
       background: var(--card-bg); 
@@ -73,11 +71,12 @@
       border-radius: 12px; 
       padding: 14px 16px; 
       margin-bottom: 12px; 
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
     .day-card.today {
       border: 1px solid var(--today-border);
-      background: #202023;
+      background: #1e1e24;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
 
     .day-title { 
@@ -129,12 +128,17 @@
 
   <div class="week-nav">
     <button class="btn" onclick="changeWeek(-1)">◀ Пред</button>
+    
     <div class="week-info">
       <div id="weekTitle" class="week-title">Неделя ...</div>
       <div id="weekDates" class="week-dates">...</div>
       <div id="weekType" class="week-type">...</div>
     </div>
-    <button class="btn" onclick="changeWeek(1)">След ▶</button>
+
+    <div class="nav-actions">
+      <button class="btn" onclick="goToCurrentWeek()" title="Вернуться к сегодняшней неделе">Сегодня</button>
+      <button class="btn" onclick="changeWeek(1)">След ▶</button>
+    </div>
   </div>
 
   <div id="scheduleContainer"></div>
@@ -173,8 +177,26 @@
     5: "Пятница"
   };
 
-  // 2-я неделя началась 07.09.2026
+  // 2-я неделя началась 07.09.2026 (месяцы в JS с 0, 8 = сентябрь)
   const START_DATE_WEEK_2 = new Date(2026, 8, 7);
+
+  // Расчет реальной текущей недели
+  function calculateCurrentWeek() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const start = new Date(START_DATE_WEEK_2);
+    start.setHours(0, 0, 0, 0);
+
+    const diffTime = today - start;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const week = Math.floor(diffDays / 7) + 2;
+
+    // Ограничиваем семестром (со 2 по 18 неделю)
+    if (week < 2) return 2;
+    if (week > 18) return 18;
+    return week;
+  }
 
   function getComputedDate(weekNum, dayIndex) {
     const date = new Date(START_DATE_WEEK_2);
@@ -189,7 +211,8 @@
     return `${day}.${month}`;
   }
 
-  let currentWeek = 4;
+  // Автоматический старт с актуальной недели
+  let currentWeek = calculateCurrentWeek();
 
   function changeWeek(delta) {
     const nextWeek = currentWeek + delta;
@@ -197,6 +220,11 @@
       currentWeek = nextWeek;
       render();
     }
+  }
+
+  function goToCurrentWeek() {
+    currentWeek = calculateCurrentWeek();
+    render();
   }
 
   function render() {

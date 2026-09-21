@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Трекер учебы — 2ИСТ</title>
   <style>
+    /* ТЕМНАЯ ТЕМА (по умолчанию) */
     :root {
       --bg: #121212;
       --card-bg: #1c1c1e;
@@ -16,6 +17,7 @@
       --text-muted: #8e8e93;
       --accent: #d1d1d6;
       --today-border: #636366;
+      --today-bg: #1e1e24;
       
       --tag-lek-bg: #2a1b1d;
       --tag-lek-text: #ff6961;
@@ -25,15 +27,73 @@
       --tag-lab-text: #bb86fc;
     }
 
+    /* СВЕТЛАЯ ТЕМА */
+    body.light-theme {
+      --bg: #f2f2f7;
+      --card-bg: #ffffff;
+      --border: #e5e5ea;
+      --btn-bg: #e5e5ea;
+      --btn-hover: #d1d1d6;
+      
+      --text: #1c1c1e;
+      --text-muted: #8e8e93;
+      --accent: #48484a;
+      --today-border: #8e8e93;
+      --today-bg: #f9f9fb;
+      
+      --tag-lek-bg: #ffe5e5;
+      --tag-lek-text: #d70015;
+      --tag-pr-bg: #e3f9e5;
+      --tag-pr-text: #248a3d;
+      --tag-lab-bg: #f1e7fe;
+      --tag-lab-text: #7d2ae8;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text); padding: 16px; display: flex; justify-content: center; }
+    
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      padding: 16px; 
+      display: flex; 
+      justify-content: center;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+    
     .container { max-width: 600px; width: 100%; }
     
-    header { text-align: center; margin-bottom: 20px; }
+    /* Шапка с кнопкой темы */
+    header { 
+      position: relative; 
+      text-align: center; 
+      margin-bottom: 20px; 
+      padding: 0 44px; /* Отступ, чтобы заголовок не наезжал на кнопку */
+    }
     h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
     .subtitle { color: var(--text-muted); font-size: 0.85rem; }
 
-/* Навигация для мобильных */
+    .theme-toggle-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    /* Навигация */
     .week-nav {
       background: var(--card-bg);
       padding: 14px;
@@ -41,28 +101,18 @@
       margin-bottom: 16px;
       border: 1px solid var(--border);
       display: flex;
-      flex-direction: column; /* Элементы друг под другом */
+      flex-direction: column;
       gap: 12px;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
     }
 
-    .week-info {
-      text-align: center;
-    }
-    .week-title {
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text);
-    }
-    .week-subtitle {
-      font-size: 0.85rem;
-      color: var(--accent);
-      margin-top: 3px;
-    }
+    .week-info { text-align: center; }
+    .week-title { font-weight: 700; font-size: 1.05rem; color: var(--text); }
+    .week-subtitle { font-size: 0.85rem; color: var(--accent); margin-top: 3px; }
 
-    /* Кнопки в один ровный ряд */
     .nav-controls {
       display: grid;
-      grid-template-columns: 1fr 1.1fr 1fr; /* Три равные колонки */
+      grid-template-columns: 1fr 1.1fr 1fr;
       gap: 8px;
       width: 100%;
     }
@@ -71,7 +121,7 @@
       background: var(--btn-bg); 
       color: var(--text); 
       border: 1px solid var(--border); 
-      height: 38px; /* Фиксированная комфортная высота для тапа */
+      height: 38px;
       padding: 0 8px;
       border-radius: 8px; 
       cursor: pointer; 
@@ -86,14 +136,13 @@
     }
     .btn:active { 
       background: var(--btn-hover); 
-      transform: scale(0.97); /* Легкий отклик при нажатии */
+      transform: scale(0.97);
     }
 
-    /* Кнопка "Сегодня" визуально выделена */
     .btn-today {
       border-color: var(--today-border);
       color: var(--accent);
-      background: #242428;
+      font-weight: 600;
     }
     
     /* Карточки дней */
@@ -103,12 +152,12 @@
       border-radius: 12px; 
       padding: 14px 16px; 
       margin-bottom: 12px; 
-      transition: all 0.2s;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
     }
     .day-card.today {
-      border: 1px solid var(--today-border);
-      background: #1e1e24;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border: 1.5px solid var(--today-border);
+      background: var(--today-bg);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     }
 
     .day-title { 
@@ -124,7 +173,7 @@
     
     .today-badge { 
       font-size: 0.65rem; 
-      background: var(--btn-hover); 
+      background: var(--btn-bg); 
       color: var(--text); 
       border: 1px solid var(--today-border);
       padding: 2px 6px; 
@@ -156,9 +205,11 @@
   <header>
     <h1>2ИСТ • Расписание</h1>
     <div class="subtitle">09.03.02 Информационные системы и технологии</div>
+    <!-- Кнопка смены темы -->
+    <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()" title="Сменить тему">☀️</button>
   </header>
 
- <div class="week-nav">
+  <div class="week-nav">
     <div class="week-info">
       <div id="weekTitle" class="week-title">Учебная неделя № ...</div>
       <div id="weekSubtitle" class="week-subtitle">...</div>
@@ -175,6 +226,28 @@
 </div>
 
 <script>
+  // --- ЛОГИКА ТЕМЫ (СВЕТЛАЯ / ТЕМНАЯ) ---
+  function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      document.getElementById('themeBtn').innerText = '🌙';
+    } else {
+      document.body.classList.remove('light-theme');
+      document.getElementById('themeBtn').innerText = '☀️';
+    }
+  }
+
+  function toggleTheme() {
+    const isLight = document.body.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    document.getElementById('themeBtn').innerText = isLight ? '🌙' : '☀️';
+  }
+
+  initTheme(); // Инициализация при загрузке страницы
+
+
+  // --- БАЗА ДАННЫХ И РАСПИСАНИЕ ---
   const SCHEDULE = {
     1: [
       { pair: 2, time: "09:40 - 11:10", name: "Элективная дисциплина (ФКиС)", type: "практ", teacher: "ст.преп. Коновалов С.Г.", weeks: [4,5,6,7,8,9,10,11,12,13,14,15,16] },
@@ -207,10 +280,8 @@
     5: "Пятница"
   };
 
-  // 2-я неделя началась 07.09.2026 (месяцы в JS с 0, 8 = сентябрь)
   const START_DATE_WEEK_2 = new Date(2026, 8, 7);
 
-  // Расчет реальной текущей недели
   function calculateCurrentWeek() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -222,7 +293,6 @@
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     const week = Math.floor(diffDays / 7) + 2;
 
-    // Ограничиваем семестром (со 2 по 18 неделю)
     if (week < 2) return 2;
     if (week > 18) return 18;
     return week;
@@ -241,7 +311,6 @@
     return `${day}.${month}`;
   }
 
-  // Автоматический старт с актуальной недели
   let currentWeek = calculateCurrentWeek();
 
   function changeWeek(delta) {

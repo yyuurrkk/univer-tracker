@@ -264,7 +264,6 @@
 
     document.getElementById("weekTitle").innerText = `Учебная неделя № ${currentWeek}`;
     document.getElementById("weekSubtitle").innerText = `${formatDate(monDate)} — ${formatDate(sunDate)} • ${typeStr}`;
-    document.getElementById("weekType").innerText = currentWeek % 2 === 0 ? "Четная неделя" : "Нечетная неделя";
 
     const container = document.getElementById("scheduleContainer");
     container.innerHTML = "";

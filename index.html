@@ -33,37 +33,69 @@
     h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
     .subtitle { color: var(--text-muted); font-size: 0.85rem; }
 
-    /* Навигация */
+/* Навигация для мобильных */
     .week-nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       background: var(--card-bg);
-      padding: 12px 14px;
+      padding: 14px;
       border-radius: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
       border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column; /* Элементы друг под другом */
+      gap: 12px;
     }
+
+    .week-info {
+      text-align: center;
+    }
+    .week-title {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+    }
+    .week-subtitle {
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-top: 3px;
+    }
+
+    /* Кнопки в один ровный ряд */
+    .nav-controls {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr; /* Три равные колонки */
+      gap: 8px;
+      width: 100%;
+    }
+
     .btn { 
       background: var(--btn-bg); 
       color: var(--text); 
       border: 1px solid var(--border); 
-      padding: 8px 12px; 
+      height: 38px; /* Фиксированная комфортная высота для тапа */
+      padding: 0 8px;
       border-radius: 8px; 
       cursor: pointer; 
       font-size: 0.85rem;
       font-weight: 500; 
-      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn:hover { background: var(--btn-hover); border-color: var(--text-muted); }
+    .btn:active { 
+      background: var(--btn-hover); 
+      transform: scale(0.97); /* Легкий отклик при нажатии */
+    }
+
+    /* Кнопка "Сегодня" визуально выделена */
+    .btn-today {
+      border-color: var(--today-border);
+      color: var(--accent);
+      background: #242428;
+    }
     
-    .week-info { text-align: center; }
-    .week-title { font-weight: 600; font-size: 1rem; color: var(--text); }
-    .week-dates { font-size: 0.85rem; color: var(--accent); margin-top: 2px; }
-    .week-type { font-size: 0.75rem; color: var(--text-muted); }
-
-    .nav-actions { display: flex; gap: 6px; }
-
     /* Карточки дней */
     .day-card { 
       background: var(--card-bg); 
@@ -126,17 +158,15 @@
     <div class="subtitle">09.03.02 Информационные системы и технологии</div>
   </header>
 
-  <div class="week-nav">
-    <button class="btn" onclick="changeWeek(-1)">◀ Пред</button>
-    
+ <div class="week-nav">
     <div class="week-info">
-      <div id="weekTitle" class="week-title">Неделя ...</div>
-      <div id="weekDates" class="week-dates">...</div>
-      <div id="weekType" class="week-type">...</div>
+      <div id="weekTitle" class="week-title">Учебная неделя № ...</div>
+      <div id="weekSubtitle" class="week-subtitle">...</div>
     </div>
 
-    <div class="nav-actions">
-      <button class="btn" onclick="goToCurrentWeek()" title="Вернуться к сегодняшней неделе">Сегодня</button>
+    <div class="nav-controls">
+      <button class="btn" onclick="changeWeek(-1)">◀ Пред</button>
+      <button class="btn btn-today" onclick="goToCurrentWeek()">Сегодня</button>
       <button class="btn" onclick="changeWeek(1)">След ▶</button>
     </div>
   </div>
@@ -230,9 +260,10 @@
   function render() {
     const monDate = getComputedDate(currentWeek, 1);
     const sunDate = getComputedDate(currentWeek, 7);
+    const typeStr = currentWeek % 2 === 0 ? "Четная" : "Нечетная";
 
     document.getElementById("weekTitle").innerText = `Учебная неделя № ${currentWeek}`;
-    document.getElementById("weekDates").innerText = `${formatDate(monDate)} — ${formatDate(sunDate)}`;
+    document.getElementById("weekSubtitle").innerText = `${formatDate(monDate)} — ${formatDate(sunDate)} • ${typeStr}`;
     document.getElementById("weekType").innerText = currentWeek % 2 === 0 ? "Четная неделя" : "Нечетная неделя";
 
     const container = document.getElementById("scheduleContainer");

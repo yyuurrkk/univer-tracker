@@ -62,12 +62,11 @@
     
     .container { max-width: 600px; width: 100%; }
     
-    /* Шапка с кнопкой темы */
     header { 
       position: relative; 
       text-align: center; 
       margin-bottom: 20px; 
-      padding: 0 44px; /* Отступ, чтобы заголовок не наезжал на кнопку */
+      padding: 0 44px;
     }
     h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; color: var(--text); }
     .subtitle { color: var(--text-muted); font-size: 0.85rem; }
@@ -205,7 +204,6 @@
   <header>
     <h1>2ИСТ • Расписание</h1>
     <div class="subtitle">09.03.02 Информационные системы и технологии</div>
-    <!-- Кнопка смены темы -->
     <button class="theme-toggle-btn" id="themeBtn" onclick="toggleTheme()" title="Сменить тему">☀️</button>
   </header>
 
@@ -226,7 +224,7 @@
 </div>
 
 <script>
-  // --- ЛОГИКА ТЕМЫ (СВЕТЛАЯ / ТЕМНАЯ) ---
+  // --- ЛОГИКА ТЕМЫ ---
   function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
@@ -244,15 +242,14 @@
     document.getElementById('themeBtn').innerText = isLight ? '🌙' : '☀️';
   }
 
-  initTheme(); // Инициализация при загрузке страницы
+  initTheme();
 
-
-  // --- БАЗА ДАННЫХ И РАСПИСАНИЕ ---
+  // --- ОБНОВЛЕННАЯ СЕТКА РАСПИСАНИЯ ---
   const SCHEDULE = {
     1: [
       { pair: 2, time: "09:40 - 11:10", name: "Элективная дисциплина (ФКиС)", type: "практ", teacher: "ст.преп. Коновалов С.Г.", weeks: [4,5,6,7,8,9,10,11,12,13,14,15,16] },
       { pair: 3, time: "11:20 - 12:50", name: "Философия", type: "лек", teacher: "доц. Штанько М.А.", weeks: [3,4,5,6,7,8,9,10,11] },
-      { pair: 4, time: "13:00 - 14:30", name: "Философия", type: "практ", teacher: "доц. Штанько М.А.", weeks: [3,4,5,6,7,8,9,10,11,12,13,14,15,16] }
+      { pair: 4, time: "13:20 - 14:50", name: "Философия", type: "практ", teacher: "доц. Штанько М.А.", weeks: [3,4,5,6,7,8,9,10,11,12,13,14,15,16] }
     ],
     2: [
       { pair: 2, time: "09:40 - 11:10", name: "История России", type: "лек", teacher: "преп. Светличная С.А.", weeks: [3,5,7,9] },
@@ -268,7 +265,7 @@
     ],
     5: [
       { pair: 3, time: "11:20 - 12:50", name: "Дискретная математика", type: "лек", teacher: "проф. Хапов Д.В.", weeks: [4,6,8,10] },
-      { pair: 4, time: "13:00 - 14:30", name: "Дискретная математика", type: "лаб", teacher: "проф. Хапов Д.В.", weeks: [4,5,6,7,8,9,10,11,12,13,14,15,16] }
+      { pair: 4, time: "13:20 - 14:50", name: "Дискретная математика", type: "лаб", teacher: "проф. Хапов Д.В.", weeks: [4,5,6,7,8,9,10,11,12,13,14,15,16] }
     ]
   };
 

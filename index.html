@@ -51,6 +51,10 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     
+    html {
+      scroll-behavior: smooth;
+    }
+
     body { 
       background: var(--bg); 
       color: var(--text); 
@@ -151,6 +155,7 @@
       border-radius: 12px; 
       padding: 14px 16px; 
       margin-bottom: 12px; 
+      scroll-margin-top: 16px; /* Аккуратный отступ сверху при скролле */
       transition: background-color 0.25s ease, border-color 0.25s ease;
     }
     .day-card.today {
@@ -224,7 +229,7 @@
 </div>
 
 <script>
-  // --- ЛОГИКА ТЕМЫ ---
+  // --- ТЕМА ---
   function initTheme() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
@@ -244,7 +249,7 @@
 
   initTheme();
 
-  // --- ОБНОВЛЕННАЯ СЕТКА РАСПИСАНИЯ ---
+  // --- РАСПИСАНИЕ ---
   const SCHEDULE = {
     1: [
       { pair: 2, time: "09:40 - 11:10", name: "Элективная дисциплина (ФКиС)", type: "практ", teacher: "ст.преп. Коновалов С.Г.", weeks: [4,5,6,7,8,9,10,11,12,13,14,15,16] },
@@ -318,9 +323,20 @@
     }
   }
 
+  // Плавный скролл к сегодняшней карточке
+  function scrollToToday() {
+    setTimeout(() => {
+      const todayCard = document.querySelector('.day-card.today');
+      if (todayCard) {
+        todayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+  }
+
   function goToCurrentWeek() {
     currentWeek = calculateCurrentWeek();
     render();
+    scrollToToday();
   }
 
   function render() {
@@ -377,7 +393,9 @@
     }
   }
 
+  // Первоначальный рендер и автоскролл
   render();
+  scrollToToday();
 </script>
 </body>
 </html>
